@@ -42,3 +42,26 @@ android {
 flutter {
     source = "../.."
 }
+
+// Force all subprojects (including receive_sharing_intent) to use Java 17
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty('android')) {
+            project.android {
+                if (hasProperty('compileOptions')) {
+                    compileOptions {
+                        sourceCompatibility = JavaVersion.VERSION_17
+                        targetCompatibility = JavaVersion.VERSION_17
+                    }
+                }
+                
+                // For Kotlin tasks in subprojects
+                project.tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+                    kotlinOptions {
+                        jvmTarget = "17"
+                    }
+                }
+            }
+        }
+    }
+}

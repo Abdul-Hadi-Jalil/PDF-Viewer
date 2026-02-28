@@ -37,6 +37,7 @@ dependencies:
   flutter_cached_pdfview: ^0.4.3
   flutter_pdfview: ^1.4.4
   file_picker: ^10.3.10
+  receive_sharing_intent: ^1.8.1
 
 dev_dependencies:
   flutter_test:
