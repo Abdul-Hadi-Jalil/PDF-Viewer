@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 
-class PdfViewPage extends StatelessWidget {
-  const PdfViewPage({super.key});
+class PdfViewPageFromAssets extends StatelessWidget {
+  const PdfViewPageFromAssets({super.key});
 
   @override
   Widget build(BuildContext context) {
