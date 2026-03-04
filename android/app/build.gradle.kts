@@ -47,15 +47,3 @@ android {
 flutter {
     source = "../.."
 }
-
-dependencies {
-    implementation("androidx.credentials:credentials:1.3.0")
-    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
-    implementation("com.google.android.libraries.identity.googleapis:googleid:1.1.1")
-    
-    //https://mvnrepository.com/artifact/com.google.api-client/google-api-client-android
-    implementation("com.google.api-client:google-api-client-android:2.7.0")
-    //https://github.com/googleapis/google-api-client-services/tree/main/clients/google-api-services
-    implementation("com.google.api:google-api-services-drive:v3-rev20240914-8.0.0")
-    implementation("com.google.android.gms:play-services-auth:21.2.0")
-}
