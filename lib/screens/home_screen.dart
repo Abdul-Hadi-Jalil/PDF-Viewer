@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pdf_viewer/screens/pdf_view_page.dart';
-import 'package:pdf_viewer/screens/view_pdf_from_local_storage.dart';
+import 'package:pdf_viewer/screens/select_pdf_from_local_storage.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
