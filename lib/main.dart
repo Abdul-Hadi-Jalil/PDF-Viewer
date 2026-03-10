@@ -12,6 +12,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'PDF Viewer', home: ViewPdfFromLocalStorage());
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'PDF Viewer',
+      home: ViewPdfFromLocalStorage(),
+    );
   }
 }
