@@ -1,4 +1,4 @@
-package com.example.aifile
+package com.example.pdf_viewer
 
 import android.content.Intent
 import android.net.Uri

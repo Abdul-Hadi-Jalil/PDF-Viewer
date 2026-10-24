@@ -2,6 +2,8 @@
 
 A new Flutter project.
 
+For the startup crash investigation, fix, verification commands, and a reusable PowerShell debugging workflow, see [Android force-close debugging guide](ANDROID_CRASH_DEBUGGING.md).
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.

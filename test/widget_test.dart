@@ -1,30 +1,62 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:pdf_viewer/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  TestWidgetsFlutterBinding.ensureInitialized();
+  const channel = MethodChannel('aifile/pdf');
+  final messenger =
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+
+  tearDown(() {
+    messenger.setMockMethodCallHandler(channel, null);
+  });
+
+  testWidgets('Normal launch shows the PDF upload button', (tester) async {
+    messenger.setMockMethodCallHandler(channel, (call) async {
+      expect(call.method, 'getInitialPdf');
+      return null;
+    });
+
     await tester.pumpWidget(const PDFViewer());
+    await tester.pumpAndSettle();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(find.byIcon(Icons.upload), findsOneWidget);
+    expect(find.byType(AlertDialog), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  testWidgets('Unreadable initial PDF shows a dismissible error', (tester) async {
+    messenger.setMockMethodCallHandler(channel, (call) async {
+      throw PlatformException(code: 'PDF_ERROR');
+    });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    await tester.pumpWidget(const PDFViewer());
+    await tester.pumpAndSettle();
+
+    expect(find.text('Cannot open PDF'), findsOneWidget);
+    await tester.tap(find.text('OK'));
+    await tester.pumpAndSettle();
+    expect(find.byType(AlertDialog), findsNothing);
+    expect(find.byIcon(Icons.upload), findsOneWidget);
+  });
+
+  testWidgets('Running app handles a native PDF error', (tester) async {
+    messenger.setMockMethodCallHandler(channel, (call) async => null);
+    await tester.pumpWidget(const PDFViewer());
+    await tester.pumpAndSettle();
+
+    await messenger.handlePlatformMessage(
+      channel.name,
+      channel.codec.encodeMethodCall(
+        const MethodCall('pdfError', 'Cannot read this PDF'),
+      ),
+      (_) {},
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Cannot open PDF'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 }
