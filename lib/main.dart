@@ -80,6 +80,7 @@ class _PDFViewerState extends State<PDFViewer> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: _navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'Flutter PDF Viewer Application',
       theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.red.shade400)),
