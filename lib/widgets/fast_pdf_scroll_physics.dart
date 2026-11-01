@@ -8,14 +8,6 @@ class FastPdfScrollPhysics extends ClampingScrollPhysics {
   final double speedMultiplier;
 
   @override
-  FastPdfScrollPhysics applyTo(ScrollPhysics? ancestor) {
-    return FastPdfScrollPhysics(
-      speedMultiplier: speedMultiplier,
-      parent: buildParent(ancestor),
-    );
-  }
-
-  @override
   Simulation? createBallisticSimulation(
     ScrollMetrics position,
     double velocity,
