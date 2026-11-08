@@ -1,18 +1,64 @@
-# pdf_viewer
+# PDF Viewer
 
-A new Flutter project.
+A focused Flutter PDF reader that opens device files and integrates with Android PDF intents. The project demonstrates local file handling, native-to-Flutter communication, and customized document scrolling.
 
-For the startup crash investigation, fix, verification commands, and a reusable PowerShell debugging workflow, see [Android force-close debugging guide](ANDROID_CRASH_DEBUGGING.md).
+## Features
 
-## Getting Started
+- Pick a local PDF and display it with `pdfrx`.
+- Open PDFs from Android “Open with” and Share actions.
+- Handle cold-start and already-running intent delivery.
+- Apply custom scrolling physics with a 2× speed multiplier while keeping the viewer configuration in one screen.
 
-This project is a starting point for a Flutter application.
+## Stack and architecture
 
-A few resources to get you started if this is your first Flutter project:
+Flutter / Dart (`^3.10.8`), `file_picker`, `pdfrx`, and Kotlin for Android intent handling. Dependency declarations are in [pubspec.yaml](pubspec.yaml).
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```mermaid
+flowchart LR
+    Home[HomeScreen picker] --> Viewer[PdfViewerScreen]
+    Android[Android PDF intent] --> Bridge[Native activity]
+    Bridge --> Channel[MethodChannel aifile/pdf]
+    Channel --> Root[Root navigator]
+    Root --> Viewer
+    Viewer --> Render[pdfrx local file renderer]
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+`main.dart` registers `openPdf` / `pdfError` callbacks and requests `getInitialPdf` after the first frame. A navigator key lets incoming intents open the viewer without relying on a screen's context. The channel retains the name `aifile/pdf`; this is the existing native contract.
+
+## Setup
+
+Install Flutter with a compatible Dart SDK, Android tooling, and an emulator or device.
+
+```sh
+git clone https://github.com/Abdul-Hadi-Jalil/PDF-Viewer.git
+cd PDF-Viewer
+flutter doctor
+flutter pub get
+flutter devices
+flutter run -d <device-id>
+```
+
+This application has no server or API-key setup for PDF viewing. Android intent support is platform-specific. Other generated runners require independent validation, particularly where a browser cannot provide a normal local filesystem path.
+
+## Code map
+
+| Path | Purpose |
+| --- | --- |
+| `lib/main.dart` | Bootstrap, navigation, intent channel |
+| `lib/screens/home_screen.dart` | PDF picker |
+| `lib/screens/pdf_viewer_screen.dart` | Renderer configuration |
+| `lib/widgets/fast_pdf_scroll_physics.dart` | Scrolling customization |
+| `android/app/src/main/` | Android activity and manifest |
+| `test/widget_test.dart` | Existing widget checks |
+
+## Verification
+
+```sh
+flutter analyze
+flutter test
+flutter build apk --debug
+```
+
+Manually verify picker cancellation, PDF rendering, scrolling, cold/hot “Open with,” Share, and unreadable files. These are verification instructions, not a claim that every platform has passed.
+
+For startup crash investigation and device-log commands, see the [Android debugging guide](ANDROID_CRASH_DEBUGGING.md).
