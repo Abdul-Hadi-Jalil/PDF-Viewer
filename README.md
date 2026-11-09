@@ -2,6 +2,14 @@
 
 A focused Flutter PDF reader that opens device files and integrates with Android PDF intents. The project demonstrates local file handling, native-to-Flutter communication, and customized document scrolling.
 
+## Mobile interface preview
+
+The intentionally minimal entry screen keeps attention on the document: tap the upload action to choose a PDF, then the selected file takes over the full viewing surface.
+
+<p align="center">
+  <img src="docs/images/pdf-viewer-mobile-entry.png" alt="PDF Viewer mobile file-entry interface" width="360">
+</p>
+
 ## Features
 
 - Pick a local PDF and display it with `pdfrx`.
